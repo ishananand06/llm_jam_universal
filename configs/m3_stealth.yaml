@@ -1,0 +1,10 @@
+# @package _global_
+# M3: Perplexity-constrained search for naturalness-preserving blockers.
+# Not yet implemented.
+
+defaults:
+  - base
+
+attack:
+  method: m3_stealth
+  perplexity_budget: 50.0

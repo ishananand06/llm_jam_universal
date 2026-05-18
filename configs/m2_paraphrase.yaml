@@ -1,0 +1,10 @@
+# @package _global_
+# M2: Class-averaged BBO loss on paraphrase query classes.
+# Not yet implemented.
+
+defaults:
+  - base
+
+attack:
+  method: m2_class_bbo
+  class_type: paraphrase

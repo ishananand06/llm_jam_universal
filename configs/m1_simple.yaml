@@ -1,0 +1,9 @@
+# @package _global_
+# M1: Centroid-targeted retrieval — representative-query variant.
+# Not yet implemented.
+
+defaults:
+  - base
+
+attack:
+  method: m1_simple

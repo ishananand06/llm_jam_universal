@@ -1,0 +1,9 @@
+# @package _global_
+# Reproduces the Shafran et al. baseline (single-query BBO).
+# All hyperparameters default to base.yaml; only the model is swapped.
+
+defaults:
+  - base
+
+models:
+  target_llm: mistralai/Mistral-7B-Instruct-v0.2

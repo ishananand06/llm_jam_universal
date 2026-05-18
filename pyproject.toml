@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "llm_jam"
+version = "0.1.0"
+requires-python = ">=3.10"
+description = "Universal blocker documents for RAG jamming — extends Shafran et al. 2025"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"

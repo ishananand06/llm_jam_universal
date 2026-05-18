@@ -1,0 +1,12 @@
+data/
+results/
+__pycache__/
+*.pyc
+*.egg-info/
+.hydra/
+outputs/
+*.pkl
+*.pt
+*.bin
+*.safetensors
+*.index

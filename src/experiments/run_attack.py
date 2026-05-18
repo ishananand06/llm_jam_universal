@@ -1,0 +1,136 @@
+"""
+Main attack experiment runner.
+
+Entry point for all attack experiments. Config-driven via Hydra.
+
+Usage:
+    python src/experiments/run_attack.py --config-name reproduction
+    python src/experiments/run_attack.py --config-name reproduction attack.num_queries=5
+    python src/experiments/run_attack.py --config-name base models.target_llm=Qwen/Qwen2.5-7B-Instruct
+"""
+from __future__ import annotations
+
+import logging
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+import hydra
+from omegaconf import DictConfig, OmegaConf
+from tqdm import tqdm
+
+# Ensure src/ is on the path when running as a script
+_src = Path(__file__).resolve().parents[2] / "src"
+if str(_src) not in sys.path:
+    sys.path.insert(0, str(_src))
+
+log = logging.getLogger(__name__)
+
+
+def _build_attack(cfg: DictConfig, retriever, generator, gpu_manager):
+    method = cfg.attack.get("method", "shafran_bbo")
+    if method == "shafran_bbo":
+        from attacks.shafran_bbo import ShafranBBO
+        return ShafranBBO(cfg, retriever, generator, gpu_manager)
+    else:
+        raise ValueError(
+            f"Unknown attack method: {method!r}. "
+            "Implement the method and register it here."
+        )
+
+
+@hydra.main(config_path="../../configs", config_name="base", version_base=None)
+def main(cfg: DictConfig) -> None:
+    from utils.seed import set_seed
+    from utils.gpu_manager import GPUManager
+    from utils.io import save_results
+    from data.nq_loader import load_nq
+    from rag.retriever import Retriever
+    from rag.generator import VLLMGenerator
+    from rag.pipeline import RAGPipeline
+    from judges.local_judge import LocalJudge
+    from data.answerable_filter import filter_answerable
+
+    set_seed(cfg.attack.seed)
+
+    log.info("Config:\n%s", OmegaConf.to_yaml(cfg))
+    log.info(
+        "Models: target=%s | rag_embed=%s | oracle=%s | judge=%s",
+        cfg.models.target_llm, cfg.models.rag_embed,
+        cfg.models.oracle_embed, cfg.models.judge,
+    )
+
+    gpu = GPUManager()
+
+    # --- Load data ---
+    if cfg.data.dataset == "nq":
+        queries, corpus = load_nq(cfg)
+    else:
+        raise ValueError(f"Unknown dataset: {cfg.data.dataset!r}")
+
+    # --- Build retrieval index ---
+    retriever = Retriever(
+        model_name=cfg.models.rag_embed,
+        score_function=cfg.retrieval.score_function,
+    )
+    index_dir = Path(cfg.paths.index_dir) / cfg.data.dataset / cfg.models.rag_embed.replace("/", "__")
+    retriever.build_or_load_index(corpus, index_dir)
+
+    # --- Load target LLM ---
+    generator = VLLMGenerator(
+        model_name=cfg.models.target_llm,
+        temperature=cfg.attack.temperature,
+        max_tokens=cfg.attack.max_response_len,
+        gpu_memory_utilization=cfg.vllm.gpu_memory_utilization,
+        dtype=cfg.vllm.dtype,
+        max_model_len=cfg.vllm.max_model_len,
+    )
+
+    pipeline = RAGPipeline(retriever, generator, cfg)
+
+    # --- Filter to answerable queries ---
+    # Load judge temporarily for filtering, then unload before the attack loop
+    # to free VRAM (judge and generator can't coexist on L40S with 7-9B models).
+    log.info("Loading judge for answerable filtering...")
+    judge = LocalJudge(model_name=cfg.models.judge)
+
+    cache_path = Path(cfg.paths.data_dir) / f"answerable_{cfg.data.dataset}_{cfg.data.split}.pkl"
+    queries = filter_answerable(queries, pipeline, judge, cfg, cache_path=cache_path)
+
+    log.info("Closing judge before attack loop to free VRAM...")
+    judge.close()
+    del judge
+
+    # --- Run attack ---
+    attack = _build_attack(cfg, retriever, generator, gpu)
+    queries_to_run = queries[: cfg.attack.num_queries]
+    log.info("Running attack on %d queries...", len(queries_to_run))
+
+    results = []
+    for q in tqdm(queries_to_run, desc="Attack"):
+        result = attack.run(q.text)
+        results.append(result)
+        log.debug("Done: query=%r | success=%s | iters=%d",
+                  q.text[:60], result.success, result.n_iterations)
+
+    # --- Save results ---
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    attack_method = cfg.attack.get("method", "shafran_bbo")
+    out_path = (
+        Path(cfg.paths.results_dir)
+        / f"{attack_method}_{cfg.data.dataset}_{timestamp}.csv"
+    )
+    save_results(results, cfg, out_path)
+
+    n_success = sum(r.success for r in results)
+    log.info(
+        "Done. ASR=%.1f%% (%d/%d). Results saved to %s",
+        100 * n_success / max(len(results), 1), n_success, len(results), out_path,
+    )
+
+    generator.close()
+    gpu.unload_all()
+
+
+if __name__ == "__main__":
+    main()

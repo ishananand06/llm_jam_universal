@@ -1,0 +1,11 @@
+# @package _global_
+# Combined M1 + M2 + M3 attack.
+# Not yet implemented.
+
+defaults:
+  - base
+
+attack:
+  method: combined
+  class_type: paraphrase
+  perplexity_budget: 50.0
