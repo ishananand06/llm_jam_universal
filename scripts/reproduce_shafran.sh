@@ -13,6 +13,8 @@ cd "$REPO_ROOT"
 
 EXTRA_ARGS="${@}"
 
-python src/experiments/run_attack.py \
+export HF_HOME=/home/ishana/scratch/hf_cache
+
+uv run python src/experiments/run_attack.py \
     --config-name reproduction \
     $EXTRA_ARGS

@@ -31,9 +31,9 @@ data:
   split: test
 
 paths:
-  data_dir: data/
-  results_dir: results/
-  index_dir: data/indices/
+  data_dir: /home/ishana/scratch/data/
+  results_dir: /home/ishana/scratch/results/
+  index_dir: /home/ishana/scratch/data/indices/
 
 vllm:
   gpu_memory_utilization: 0.85

@@ -13,9 +13,7 @@ We extend single-query blocker documents to **universal** blockers that jam enti
 ## Setup
 
 ```bash
-conda env create -f environment.yml
-conda activate llm_jam
-pip install -e .
+uv sync
 ```
 
 ## Reproduce Shafran baseline
