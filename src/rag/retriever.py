@@ -124,6 +124,7 @@ class Retriever:
         index = faiss.IndexFlatIP(dim)
         if torch.cuda.is_available():
             res = faiss.StandardGpuResources()
+            res.setTempMemory(256 * 1024 * 1024)  # 256 MB instead of default 1.5 GB
             index = faiss.index_cpu_to_gpu(res, 0, index)
         index.add(embs)
         self._index = index
@@ -151,6 +152,7 @@ class Retriever:
         cpu_index = faiss.read_index(str(path / "index.faiss"))
         if torch.cuda.is_available():
             res = faiss.StandardGpuResources()
+            res.setTempMemory(256 * 1024 * 1024)
             self._index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
         else:
             self._index = cpu_index

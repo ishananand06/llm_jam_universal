@@ -50,6 +50,7 @@ class Attack(ABC):
         self.generator = generator
         self.gpu_manager = gpu_manager
         self._tokenizer = self._load_tokenizer()
+        self._last_response: str = ""
 
     def _load_tokenizer(self):
         from transformers import AutoTokenizer
@@ -173,13 +174,12 @@ class Attack(ABC):
                 break
 
         # Final evaluation: get the actual response for this doc
-        from rag.pipeline import RAGPipeline
-        # Generator is passed in from the experiment runner; use score_candidates
-        # to get the last response via a single-candidate score call.
-        final_scores = self.score_candidates([cur_doc], query, query_emb)
-        _ = final_scores  # side effect: response_history populated by subclass
+        self._last_response = ""
+        self.score_candidates([cur_doc], query, query_emb)
+        if self._last_response:
+            response_history = [self._last_response]
 
-        success = bool(cur_loss < 0)  # subclasses may override via _check_success()
+        success = bool(cur_loss < 0)
 
         return AttackResult(
             query=query,

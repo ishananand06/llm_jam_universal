@@ -14,6 +14,7 @@ cd "$REPO_ROOT"
 EXTRA_ARGS="${@}"
 
 export HF_HOME=/home/ishana/scratch/hf_cache
+export CUDA_VISIBLE_DEVICES=1
 
 uv run python src/experiments/run_attack.py \
     --config-name reproduction \

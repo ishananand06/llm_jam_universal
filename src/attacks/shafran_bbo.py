@@ -186,6 +186,8 @@ class ShafranBBO(Attack):
         responses = self.generator.generate(prompts)
 
         # --- Step 4: embed responses with oracle model ---
+        if len(candidate_docs) == 1 and responses:
+            self._last_response = responses[0]
         resp_embs = self._embed_oracle(responses)
 
         # --- Step 5: compute losses ---

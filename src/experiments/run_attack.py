@@ -11,9 +11,15 @@ Usage:
 from __future__ import annotations
 
 import logging
+import os
 import sys
 from datetime import datetime, timezone
+
+os.environ.setdefault("HF_HOME", "/home/ishana/scratch/hf_cache")
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "1")
 from pathlib import Path
+
+import pickle
 
 import hydra
 from omegaconf import DictConfig, OmegaConf
@@ -89,21 +95,78 @@ def main(cfg: DictConfig) -> None:
     pipeline = RAGPipeline(retriever, generator, cfg)
 
     # --- Filter to answerable queries ---
-    # Load judge temporarily for filtering, then unload before the attack loop
-    # to free VRAM (judge and generator can't coexist on L40S with 7-9B models).
-    log.info("Loading judge for answerable filtering...")
-    judge = LocalJudge(model_name=cfg.models.judge)
-
+    # Generator (vLLM) and judge (Gemma-2-9B) can't coexist on one GPU.
+    # On cache hit: load IDs and skip both models.
+    # On cache miss: phase 1 generates all responses (generator only),
+    #               then generator is closed before judge loads.
     cache_path = Path(cfg.paths.data_dir) / f"answerable_{cfg.data.dataset}_{cfg.data.split}.pkl"
-    queries = filter_answerable(queries, pipeline, judge, cfg, cache_path=cache_path)
 
-    log.info("Closing judge before attack loop to free VRAM...")
-    judge.close()
-    del judge
+    if cache_path.exists():
+        log.info("Loading answerable-filter cache from %s", cache_path)
+        with open(cache_path, "rb") as f:
+            answerable_ids: set[str] = pickle.load(f)
+        queries = [q for q in queries if q.id in answerable_ids]
+        log.info("Loaded %d answerable queries from cache.", len(queries))
+    else:
+        responses_path = Path(cfg.paths.data_dir) / f"filter_responses_{cfg.data.dataset}_{cfg.data.split}.pkl"
+
+        if responses_path.exists():
+            log.info("Loading phase-1 response cache from %s (skipping generation)", responses_path)
+            with open(responses_path, "rb") as f:
+                query_responses: list[tuple] = pickle.load(f)
+            log.info("Loaded %d cached responses. Closing generator.", len(query_responses))
+            generator.close()
+        else:
+            log.info("Answerable filter phase 1: running pipeline on %d queries...", len(queries))
+            query_responses = [
+                (q, pipeline.run(q.text).response)
+                for q in tqdm(queries, desc="Filter/generate")
+            ]
+            responses_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(responses_path, "wb") as f:
+                pickle.dump(query_responses, f)
+            log.info("Phase-1 responses saved to %s", responses_path)
+
+            log.info("Closing generator to free VRAM for judge...")
+            generator.close()
+
+        log.info("Answerable filter phase 2: loading judge...")
+        judge = LocalJudge(model_name=cfg.models.judge)
+        answerable_ids = set()
+        for q, response in tqdm(query_responses, desc="Filter/judge"):
+            if judge.is_answered(q.text, response):
+                answerable_ids.add(q.id)
+        judge.close()
+        del judge
+
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(cache_path, "wb") as f:
+            pickle.dump(answerable_ids, f)
+        log.info("Answerable filter: %d/%d answerable. Cache saved to %s",
+                 len(answerable_ids), len(queries), cache_path)
+        responses_path.unlink(missing_ok=True)
+
+        queries = [q for q in queries if q.id in answerable_ids]
+
+        log.info("Reloading generator for attack loop...")
+        generator = VLLMGenerator(
+            model_name=cfg.models.target_llm,
+            temperature=cfg.attack.temperature,
+            max_tokens=cfg.attack.max_response_len,
+            gpu_memory_utilization=cfg.vllm.gpu_memory_utilization,
+            dtype=cfg.vllm.dtype,
+            max_model_len=cfg.vllm.max_model_len,
+        )
+        pipeline = RAGPipeline(retriever, generator, cfg)
 
     # --- Run attack ---
     attack = _build_attack(cfg, retriever, generator, gpu)
     queries_to_run = queries[: cfg.attack.num_queries]
+    attack_method = cfg.attack.get("method", "shafran_bbo")
+    checkpoint_path = (
+        Path(cfg.paths.results_dir)
+        / f"{attack_method}_{cfg.data.dataset}_checkpoint.csv"
+    )
     log.info("Running attack on %d queries...", len(queries_to_run))
 
     results = []
@@ -112,15 +175,16 @@ def main(cfg: DictConfig) -> None:
         results.append(result)
         log.debug("Done: query=%r | success=%s | iters=%d",
                   q.text[:60], result.success, result.n_iterations)
+        save_results(results, cfg, checkpoint_path)
 
     # --- Save results ---
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    attack_method = cfg.attack.get("method", "shafran_bbo")
     out_path = (
         Path(cfg.paths.results_dir)
         / f"{attack_method}_{cfg.data.dataset}_{timestamp}.csv"
     )
     save_results(results, cfg, out_path)
+    checkpoint_path.unlink(missing_ok=True)
 
     n_success = sum(r.success for r in results)
     log.info(

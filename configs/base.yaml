@@ -36,7 +36,7 @@ paths:
   index_dir: /home/ishana/scratch/data/indices/
 
 vllm:
-  gpu_memory_utilization: 0.85
+  gpu_memory_utilization: 0.65
   dtype: float16
   max_model_len: 4096
 

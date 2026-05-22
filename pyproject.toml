@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "llm_jam"
@@ -13,7 +13,7 @@ dependencies = [
     "scipy",
     "pandas",
     "tqdm",
-    "transformers>=4.44",
+    "transformers>=4.44,<5.0",
     "sentence-transformers>=3.4",
     "faiss-gpu-cu12",
     "vllm>=0.5.3",
