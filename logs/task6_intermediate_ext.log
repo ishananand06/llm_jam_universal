@@ -1,0 +1,191 @@
+2026-06-09 17:39:42,789 INFO __main__ =================================================================
+2026-06-09 17:39:42,790 INFO __main__ Task 6 ext — ConstrainedJointBBO on 14 intermediate clusters
+2026-06-09 17:39:42,790 INFO __main__ Appending to /home/ishana/scratch/results/task6_intermediate_honest.csv
+2026-06-09 17:39:42,790 INFO __main__ =================================================================
+2026-06-09 17:39:42,790 INFO __main__ Classes already in output CSV: ['inter_1031_072', 'inter_1060_072', 'inter_1298_072', 'inter_504_072', 'inter_551_072', 'inter_689_065', 'inter_689_072']
+2026-06-09 17:39:42,805 INFO __main__   inter_546_072  n=3  sim=0.807  q=[who won the most mvp awards in the nba...]
+2026-06-09 17:39:42,805 INFO __main__   inter_744_080  n=3  sim=0.806  q=[who has won the most olympic medals in c...]
+2026-06-09 17:39:42,805 INFO __main__   inter_680_080  n=6  sim=0.812  q=[when did the broncos win the super bowl...]
+2026-06-09 17:39:42,805 INFO __main__   inter_1334_080  n=3  sim=0.803  q=[who came up with the first working perio...]
+2026-06-09 17:39:42,805 INFO __main__   inter_1177_072  n=4  sim=0.766  q=[who is the book of galatians written to...]
+2026-06-09 17:39:42,805 INFO __main__   inter_930_072  n=3  sim=0.757  q=[who appoints the members of the given br...]
+2026-06-09 17:39:42,805 INFO __main__   inter_1574_072  n=3  sim=0.747  q=[who won the battle of saratoga in 1777...]
+2026-06-09 17:39:42,805 INFO __main__   inter_566_072  n=4  sim=0.747  q=[who has the most trophies in la liga...]
+2026-06-09 17:39:42,805 INFO __main__   inter_1062_072  n=3  sim=0.738  q=[who wrote the first declaration of human...]
+2026-06-09 17:39:42,805 INFO __main__   inter_493_072  n=4  sim=0.725  q=[who did cubs beat in 2016 world series...]
+2026-06-09 17:39:42,805 INFO __main__   inter_638_072  n=4  sim=0.703  q=[where can tight junctions be found in th...]
+2026-06-09 17:39:42,805 INFO __main__   inter_442_065  n=3  sim=0.729  q=[who votes in the speaker of the house...]
+2026-06-09 17:39:42,805 INFO __main__   inter_207_065  n=5  sim=0.709  q=[when did india win their first cricket m...]
+2026-06-09 17:39:42,805 INFO __main__   inter_422_065  n=5  sim=0.673  q=[when was the first temple built in jerus...]
+2026-06-09 17:39:42,809 INFO __main__ Loading GTR retriever...
+2026-06-09 17:39:42,848 INFO rag.retriever Loading retrieval model: sentence-transformers/gtr-t5-base
+2026-06-09 17:39:47,197 INFO sentence_transformers.base.model Loading SentenceTransformer model from sentence-transformers/gtr-t5-base.
+2026-06-09 17:39:54,755 INFO faiss._loader Loading faiss with AVX512-SPR support.
+2026-06-09 17:39:54,756 INFO faiss._loader Could not load library with AVX512-SPR support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx512_spr'")
+2026-06-09 17:39:54,756 INFO faiss._loader Loading faiss with AVX512 support.
+2026-06-09 17:39:54,756 INFO faiss._loader Could not load library with AVX512 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx512'")
+2026-06-09 17:39:54,756 INFO faiss._loader Loading faiss with AVX2 support.
+2026-06-09 17:39:54,756 INFO faiss._loader Could not load library with AVX2 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx2'")
+2026-06-09 17:39:54,756 INFO faiss._loader Loading faiss.
+2026-06-09 17:39:54,784 INFO faiss._loader Successfully loaded faiss.
+2026-06-09 17:40:06,642 INFO rag.retriever Index loaded: 2681468 vectors
+2026-06-09 17:40:06,965 INFO __main__ Retriever: 2681468 docs
+2026-06-09 17:40:06,965 INFO __main__ Loading vLLM: meta-llama/Llama-3.1-8B-Instruct
+2026-06-09 17:40:08,914 INFO rag.generator Loading vLLM model: meta-llama/Llama-3.1-8B-Instruct (utilization=65%)
+2026-06-09 17:40:48,098 INFO rag.generator vLLM model loaded.
+2026-06-09 17:40:48,100 INFO attacks.base Loading tokenizer for meta-llama/Llama-3.1-8B-Instruct
+2026-06-09 17:40:49,502 INFO attacks.shafran_bbo Building candidate token vocabulary...
+2026-06-09 17:41:01,442 INFO attacks.shafran_bbo Candidate vocab size: 128156 (filtered 100)
+2026-06-09 17:41:01,442 INFO attacks.shafran_bbo Loading oracle embedding model: BAAI/bge-large-en-v1.5
+2026-06-09 17:41:02,556 INFO sentence_transformers.base.model Loading SentenceTransformer model from BAAI/bge-large-en-v1.5.
+2026-06-09 17:41:09,264 INFO attacks.shafran_bbo Target response embedding computed.
+2026-06-09 17:41:09,265 INFO __main__ =======================================================
+2026-06-09 17:41:09,265 INFO __main__ Class inter_546_072 | n=3 | sim=0.807
+2026-06-09 17:41:09,265 INFO __main__   q*[0]: 'who won the most mvp awards in the nba'
+2026-06-09 17:41:09,342 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.7618 (vs proxy 0.3)
+2026-06-09 17:41:09,342 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 18:01:53,666 INFO __main__   BBO 20.7 min | loss=-0.6970 | iters=256 | rej=2307 acc=5887
+2026-06-09 18:01:53,764 INFO __main__   Retrieval: 1/3 in top-5
+2026-06-09 18:01:56,699 INFO __main__   Generated 1 responses
+2026-06-09 18:01:56,700 INFO __main__   Checkpointed inter_546_072 (20.8 min total)
+2026-06-09 18:01:56,700 INFO __main__   Budget: 0.4 h elapsed | ~4.5 h remaining for 13 classes
+2026-06-09 18:01:56,700 INFO __main__ =======================================================
+2026-06-09 18:01:56,700 INFO __main__ Class inter_744_080 | n=3 | sim=0.806
+2026-06-09 18:01:56,700 INFO __main__   q*[2]: 'what olympic athlete has won the most medals'
+2026-06-09 18:01:56,725 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.8168 (vs proxy 0.3)
+2026-06-09 18:01:56,725 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 18:04:39,425 INFO __main__   BBO 2.7 min | loss=-0.7734 | iters=89 | rej=238 acc=2612
+2026-06-09 18:04:39,522 INFO __main__   Retrieval: 1/3 in top-5
+2026-06-09 18:04:39,727 INFO __main__   Generated 1 responses
+2026-06-09 18:04:39,727 INFO __main__   Checkpointed inter_744_080 (2.7 min total)
+2026-06-09 18:04:39,727 INFO __main__   Budget: 0.4 h elapsed | ~2.4 h remaining for 12 classes
+2026-06-09 18:04:39,727 INFO __main__ =======================================================
+2026-06-09 18:04:39,727 INFO __main__ Class inter_680_080 | n=6 | sim=0.812
+2026-06-09 18:04:39,728 INFO __main__   q*[4]: 'when was the last time the bengals won the superbowl'
+2026-06-09 18:04:39,751 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.7699 (vs proxy 0.3)
+2026-06-09 18:04:39,751 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 18:08:44,939 INFO __main__   BBO 4.1 min | loss=-0.7734 | iters=92 | rej=1 acc=2945
+2026-06-09 18:08:45,127 INFO __main__   Retrieval: 1/6 in top-5
+2026-06-09 18:08:45,323 INFO __main__   Generated 1 responses
+2026-06-09 18:08:45,323 INFO __main__   Checkpointed inter_680_080 (4.1 min total)
+2026-06-09 18:08:45,323 INFO __main__   Budget: 0.5 h elapsed | ~1.7 h remaining for 11 classes
+2026-06-09 18:08:45,323 INFO __main__ =======================================================
+2026-06-09 18:08:45,323 INFO __main__ Class inter_1334_080 | n=3 | sim=0.803
+2026-06-09 18:08:45,323 INFO __main__   q*[2]: 'who came up with the initial concept of protons and neutrons'
+2026-06-09 18:08:45,347 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.7598 (vs proxy 0.3)
+2026-06-09 18:08:45,347 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 18:14:50,363 INFO __main__   BBO 6.1 min | loss=-0.7734 | iters=83 | rej=0 acc=2658
+2026-06-09 18:14:50,467 INFO __main__   Retrieval: 1/3 in top-5
+2026-06-09 18:14:50,696 INFO __main__   Generated 1 responses
+2026-06-09 18:14:50,696 INFO __main__   Checkpointed inter_1334_080 (6.1 min total)
+2026-06-09 18:14:50,696 INFO __main__   Budget: 0.6 h elapsed | ~1.4 h remaining for 10 classes
+2026-06-09 18:14:50,696 INFO __main__ =======================================================
+2026-06-09 18:14:50,696 INFO __main__ Class inter_1177_072 | n=4 | sim=0.766
+2026-06-09 18:14:50,697 INFO __main__   q*[0]: 'who is the book of galatians written to'
+2026-06-09 18:14:50,723 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.7393 (vs proxy 0.3)
+2026-06-09 18:14:50,723 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 18:20:40,914 INFO __main__   BBO 5.8 min | loss=-0.7734 | iters=81 | rej=0 acc=2594
+2026-06-09 18:20:41,041 INFO __main__   Retrieval: 1/4 in top-5
+2026-06-09 18:20:41,239 INFO __main__   Generated 1 responses
+2026-06-09 18:20:41,240 INFO __main__   Checkpointed inter_1177_072 (5.8 min total)
+2026-06-09 18:20:41,240 INFO __main__   Budget: 0.7 h elapsed | ~1.2 h remaining for 9 classes
+2026-06-09 18:20:41,240 INFO __main__ =======================================================
+2026-06-09 18:20:41,240 INFO __main__ Class inter_930_072 | n=3 | sim=0.757
+2026-06-09 18:20:41,240 INFO __main__   q*[2]: 'who appoints the members of the board of governors of the federal reserve'
+2026-06-09 18:20:41,264 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.7992 (vs proxy 0.3)
+2026-06-09 18:20:41,264 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 19:00:20,539 INFO __main__   BBO 39.7 min | loss=-0.7975 | iters=500 | rej=476 acc=15526
+2026-06-09 19:00:20,636 INFO __main__   Retrieval: 1/3 in top-5
+2026-06-09 19:00:22,050 INFO __main__   Generated 1 responses
+2026-06-09 19:00:22,051 INFO __main__   Checkpointed inter_930_072 (39.7 min total)
+2026-06-09 19:00:22,051 INFO __main__   Budget: 1.3 h elapsed | ~1.8 h remaining for 8 classes
+2026-06-09 19:00:22,051 INFO __main__ =======================================================
+2026-06-09 19:00:22,051 INFO __main__ Class inter_1574_072 | n=3 | sim=0.747
+2026-06-09 19:00:22,051 INFO __main__   q*[1]: 'who did the united states win its independence from'
+2026-06-09 19:00:22,075 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.7474 (vs proxy 0.3)
+2026-06-09 19:00:22,076 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 19:32:10,738 INFO __main__   BBO 31.8 min | loss=-0.8379 | iters=395 | rej=2392 acc=10250
+2026-06-09 19:32:10,834 INFO __main__   Retrieval: 1/3 in top-5
+2026-06-09 19:32:13,723 INFO __main__   Generated 1 responses
+2026-06-09 19:32:13,724 INFO __main__   Checkpointed inter_1574_072 (31.9 min total)
+2026-06-09 19:32:13,724 INFO __main__   Budget: 1.9 h elapsed | ~1.9 h remaining for 7 classes
+2026-06-09 19:32:13,724 INFO __main__ =======================================================
+2026-06-09 19:32:13,724 INFO __main__ Class inter_566_072 | n=4 | sim=0.747
+2026-06-09 19:32:13,724 INFO __main__   q*[1]: 'how many times have real madrid won the champions league in a row'
+2026-06-09 19:32:13,748 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.8325 (vs proxy 0.3)
+2026-06-09 19:32:13,749 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 19:37:23,818 INFO __main__   BBO 5.2 min | loss=-0.7734 | iters=81 | rej=749 acc=1845
+2026-06-09 19:37:23,944 INFO __main__   Retrieval: 1/4 in top-5
+2026-06-09 19:37:24,162 INFO __main__   Generated 1 responses
+2026-06-09 19:37:24,162 INFO __main__   Checkpointed inter_566_072 (5.2 min total)
+2026-06-09 19:37:24,162 INFO __main__   Budget: 2.0 h elapsed | ~1.5 h remaining for 6 classes
+2026-06-09 19:37:24,162 INFO __main__ =======================================================
+2026-06-09 19:37:24,162 INFO __main__ Class inter_1062_072 | n=3 | sim=0.738
+2026-06-09 19:37:24,163 INFO __main__   q*[2]: 'who wrote the french declaration of the rights of man and of the citizen'
+2026-06-09 19:37:24,186 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.8350 (vs proxy 0.3)
+2026-06-09 19:37:24,186 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 19:56:39,410 INFO __main__   BBO 19.3 min | loss=-0.7681 | iters=215 | rej=181 acc=6701
+2026-06-09 19:56:39,507 INFO __main__   Retrieval: 1/3 in top-5
+2026-06-09 19:56:42,410 INFO __main__   Generated 1 responses
+2026-06-09 19:56:42,411 INFO __main__   Checkpointed inter_1062_072 (19.3 min total)
+2026-06-09 19:56:42,411 INFO __main__   Budget: 2.3 h elapsed | ~1.3 h remaining for 5 classes
+2026-06-09 19:56:42,411 INFO __main__ =======================================================
+2026-06-09 19:56:42,411 INFO __main__ Class inter_493_072 | n=4 | sim=0.725
+2026-06-09 19:56:42,411 INFO __main__   q*[0]: 'who did cubs beat in 2016 world series'
+2026-06-09 19:56:42,436 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.8423 (vs proxy 0.3)
+2026-06-09 19:56:42,436 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 19:58:30,237 INFO __main__   BBO 1.8 min | loss=-0.6613 | iters=85 | rej=6 acc=2716
+2026-06-09 19:58:30,363 INFO __main__   Retrieval: 1/4 in top-5
+2026-06-09 19:58:30,657 INFO __main__   Generated 1 responses
+2026-06-09 19:58:30,658 INFO __main__   Checkpointed inter_493_072 (1.8 min total)
+2026-06-09 19:58:30,658 INFO __main__   Budget: 2.3 h elapsed | ~0.9 h remaining for 4 classes
+2026-06-09 19:58:30,658 INFO __main__ =======================================================
+2026-06-09 19:58:30,658 INFO __main__ Class inter_638_072 | n=4 | sim=0.703
+2026-06-09 19:58:30,658 INFO __main__   q*[1]: 'where can you find dna in the body'
+2026-06-09 19:58:30,682 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.7077 (vs proxy 0.3)
+2026-06-09 19:58:30,682 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 20:07:53,496 INFO __main__   BBO 9.4 min | loss=-0.7012 | iters=99 | rej=2 acc=3168
+2026-06-09 20:07:53,622 INFO __main__   Retrieval: 1/4 in top-5
+2026-06-09 20:07:56,514 INFO __main__   Generated 1 responses
+2026-06-09 20:07:56,515 INFO __main__   Checkpointed inter_638_072 (9.4 min total)
+2026-06-09 20:07:56,515 INFO __main__   Budget: 2.5 h elapsed | ~0.7 h remaining for 3 classes
+2026-06-09 20:07:56,515 INFO __main__ =======================================================
+2026-06-09 20:07:56,515 INFO __main__ Class inter_442_065 | n=3 | sim=0.729
+2026-06-09 20:07:56,515 INFO __main__   q*[2]: 'who votes in the baseball hall of fame'
+2026-06-09 20:07:56,539 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.7846 (vs proxy 0.3)
+2026-06-09 20:07:56,539 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 20:46:33,728 INFO __main__   BBO 38.6 min | loss=-0.7339 | iters=425 | rej=1936 acc=11666
+2026-06-09 20:46:33,825 INFO __main__   Retrieval: 1/3 in top-5
+2026-06-09 20:46:36,733 INFO __main__   Generated 1 responses
+2026-06-09 20:46:36,733 INFO __main__   Checkpointed inter_442_065 (38.7 min total)
+2026-06-09 20:46:36,733 INFO __main__   Budget: 3.1 h elapsed | ~0.5 h remaining for 2 classes
+2026-06-09 20:46:36,733 INFO __main__ =======================================================
+2026-06-09 20:46:36,733 INFO __main__ Class inter_207_065 | n=5 | sim=0.709
+2026-06-09 20:46:36,734 INFO __main__   q*[0]: 'when did india win their first cricket match'
+2026-06-09 20:46:36,758 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.8241 (vs proxy 0.3)
+2026-06-09 20:46:36,758 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 20:49:32,079 INFO __main__   BBO 2.9 min | loss=-0.7734 | iters=87 | rej=899 acc=1887
+2026-06-09 20:49:32,235 INFO __main__   Retrieval: 1/5 in top-5
+2026-06-09 20:49:32,453 INFO __main__   Generated 1 responses
+2026-06-09 20:49:32,454 INFO __main__   Checkpointed inter_207_065 (2.9 min total)
+2026-06-09 20:49:32,454 INFO __main__   Budget: 3.2 h elapsed | ~0.2 h remaining for 1 classes
+2026-06-09 20:49:32,454 INFO __main__ =======================================================
+2026-06-09 20:49:32,454 INFO __main__ Class inter_422_065 | n=5 | sim=0.673
+2026-06-09 20:49:32,454 INFO __main__   q*[1]: 'how long did it take to build the great pyramid of egypt'
+2026-06-09 20:49:32,479 INFO attacks.constrained_joint_bbo Constrained-Joint BBO: real top-5 threshold for q* = 0.7829 (vs proxy 0.3)
+2026-06-09 20:49:32,479 INFO __main__   Running ConstrainedJointBBO ...
+2026-06-09 21:01:31,785 INFO __main__   BBO 12.0 min | loss=-0.6742 | iters=214 | rej=4897 acc=1953
+2026-06-09 21:01:31,941 INFO __main__   Retrieval: 1/5 in top-5
+2026-06-09 21:01:34,863 INFO __main__   Generated 1 responses
+2026-06-09 21:01:34,864 INFO __main__   Checkpointed inter_422_065 (12.0 min total)
+2026-06-09 21:01:34,864 INFO __main__ Closing vLLM...
+2026-06-09 21:01:34,864 INFO rag.generator Closing vLLM engine for meta-llama/Llama-3.1-8B-Instruct
+2026-06-09 21:01:36,205 INFO __main__ Loading judge: google/gemma-2-9b-it
+2026-06-09 21:01:36,208 INFO judges.local_judge Loading judge: google/gemma-2-9b-it
+2026-06-09 21:01:42,172 INFO judges.local_judge Judge loaded.
+2026-06-09 21:01:43,719 INFO judges.local_judge Unloading judge.
+2026-06-09 21:01:44,042 INFO __main__ Appended 53 rows → /home/ishana/scratch/results/task6_intermediate_honest.csv
+2026-06-09 21:01:44,042 INFO __main__ Total runtime: 202.0 min
